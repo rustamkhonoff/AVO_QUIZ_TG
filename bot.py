@@ -5,7 +5,6 @@ from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
@@ -23,8 +22,6 @@ async def start(message: Message):
     await message.answer("Нажмите кнопку ниже, чтобы начать!", reply_markup=keyboard)
 
 async def main():
-    dp.include_router(dp)
-    
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
