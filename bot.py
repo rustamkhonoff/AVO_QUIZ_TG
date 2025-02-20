@@ -18,10 +18,11 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start(message: Message):
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="🎮 Играть", web_app=WebAppInfo(url=URL))]],
+        keyboard=[[KeyboardButton(text="🎮 Начать!", web_app=WebAppInfo(url=URL))]],
         resize_keyboard=True
     )
-    await message.answer("Нажмите кнопку ниже, чтобы открыть игру прямо в Telegram!", reply_markup=keyboard)
+    await message.answer("Нажмите кнопку ниже чтоб начать тест "Кем
+ты будешь в кибер-Узбекистане?", reply_markup=keyboard)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
