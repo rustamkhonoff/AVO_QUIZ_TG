@@ -1,9 +1,10 @@
 import os
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 from aiogram.filters import Command
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -16,10 +17,11 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: Message):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🎮 Запустить!", url=URL)]
-    ])
-    await message.answer("Нажмите кнопку ниже, чтобы начать!", reply_markup=keyboard)
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="🎮 Играть", web_app=WebAppInfo(url=URL))]],
+        resize_keyboard=True
+    )
+    await message.answer("Нажмите кнопку ниже, чтобы открыть игру прямо в Telegram!", reply_markup=keyboard)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
