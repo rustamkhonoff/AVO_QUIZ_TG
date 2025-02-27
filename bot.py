@@ -1,7 +1,7 @@
 import os
 import asyncio
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 from aiogram.filters import Command
 from dotenv import load_dotenv
 
@@ -15,15 +15,11 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: Message):
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="🎮 Начать!", url=URL)]
-        ]
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="🎮 Начать!", web_app=WebAppInfo(url=URL))]],
+        resize_keyboard=True
     )
-    await message.answer(
-        "Нажмите кнопку ниже, чтобы начать тест \"Кем ты будешь в кибер-Узбекистане?\"",
-        reply_markup=keyboard
-    )
+    await message.answer("Начать", reply_markup=keyboard)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
