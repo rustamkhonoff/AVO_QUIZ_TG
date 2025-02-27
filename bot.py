@@ -1,29 +1,25 @@
-import os
-import asyncio
-from aiogram import Bot, Dispatcher
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
-from aiogram.filters import Command
-from dotenv import load_dotenv
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 
-load_dotenv()
+TOKEN = "YOUR_BOT_TOKEN"
+WEBGL_URL = "https://avo-quiz-pub.vercel.app/"
 
-TOKEN = os.getenv("TOKEN")
-URL = "https://avo-quiz-pub.vercel.app"
+def start(update: Update, context: CallbackContext) -> None:
+    username = update.message.from_user.username
+    user_url = f"{WEBGL_URL}?user={username}"
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher()
-
-@dp.message(Command("start"))
-async def start(message: Message):
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="🎮 Начать!", web_app=WebAppInfo(url=URL))]],
-        resize_keyboard=True
+    keyboard = [
+        [InlineKeyboardButton("🎮 Play Now", web_app={"url": user_url})]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    update.message.reply_text(
+        "Click below to play the game inside Telegram! 🚀",
+        reply_markup=reply_markup
     )
-    await message.answer("Начать", reply_markup=keyboard)
 
-async def main():
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+updater = Updater(TOKEN, use_context=True)
+dp = updater.dispatcher
+dp.add_handler(CommandHandler("start", start))
+updater.start_polling()
+updater.idle()
