@@ -1,25 +1,32 @@
-from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+import os
+import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
+from aiogram.filters import Command
+from dotenv import load_dotenv
 
-TOKEN = "YOUR_BOT_TOKEN"
-WEBGL_URL = "https://avo-quiz-pub.vercel.app/"
+load_dotenv()
 
-def start(update: Update, context: CallbackContext) -> None:
-    username = update.message.from_user.username
-    user_url = f"{WEBGL_URL}?user={username}"
+TOKEN = os.getenv("TOKEN")
+BASE_URL = "https://avo-quiz-pub.vercel.app"  # Замените на ваш URL
 
-    keyboard = [
-        [InlineKeyboardButton("🎮 Play Now", web_app={"url": user_url})]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    update.message.reply_text(
-        "Click below to play the game inside Telegram! 🚀",
-        reply_markup=reply_markup
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+@dp.message(Command("start"))
+async def start(message: Message):
+    username = message.from_user.username or "Guest"  # Если нет username, то "Guest"
+    user_url = f"{BASE_URL}?user={username}"  # Добавляем параметр в URL
+
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="🎮 Начать!", web_app=WebAppInfo(url=user_url))]],
+        resize_keyboard=True
     )
+    await message.answer("Нажмите кнопку ниже, чтобы начать игру! 🎮", reply_markup=keyboard)
 
-updater = Updater(TOKEN, use_context=True)
-dp = updater.dispatcher
-dp.add_handler(CommandHandler("start", start))
-updater.start_polling()
-updater.idle()
+async def main():
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
