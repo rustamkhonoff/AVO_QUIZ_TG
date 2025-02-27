@@ -5,12 +5,10 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, WebAppIn
 from aiogram.filters import Command
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 URL = "https://avo-quiz-pub.vercel.app"
-
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
