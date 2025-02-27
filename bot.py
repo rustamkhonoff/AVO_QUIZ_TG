@@ -28,7 +28,7 @@ async def start(message: Message):
     user_id = message.from_user.id
 
     # Формируем ссылку с параметрами
-    user_url = f"{BASE_URL}?user={username}&name={first_name}&id={user_id}"
+    user_url = f"{BASE_URL}?user={message.from_user}&name={first_name}&id={user_id}"
 
     # Создаём клавиатуру с Web App кнопкой
     keyboard = ReplyKeyboardMarkup(
